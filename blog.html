@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Blog</title>
+  <style>
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .post {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .post h2 {
+      margin-top: 0;
+    }
+
+    .post p {
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Additional styles for navigation links */
+    nav {
+      margin-bottom: 20px;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+
+    nav ul li {
+      display: inline-block;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      background-color: #555;
+      border-radius: 4px;
+    }
+
+    nav ul li a:hover {
+      background-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="./projects.html">Projects</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./experience.html">Experience</a></li>
+        <li><a href="./contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="post">
+      <h2>So, you've been DOM'd, an introduction to XSS for developers</h2>
+      <p>
+        XSS, three malicious letters that strike fear into the hearts of web developers. A vulnerability that is over 20 years old now and has a rich history documenting its development, being in every OWASP’s top 10 <a href="https://owasp.org/www-project-top-ten/">vulnerabilities</a> from its inception in 2003 till 2017. But I’m not here to go into its <a href="https://www.youtube.com/watch?v=Ja4r1ogZjSY">history</a> or its confusing <a href="https://www.youtube.com/watch?v=mKAWpFdVcPY">etymology</a>, no dear Developer, what I’m here to do is to serve as a PSA of sorts about the dangers, causes, and solutions related to this threat.
+        <br />
+        <br />
+        XSS, in simple terms, is a form of JavaScript/HTML injection, where an attacker tricks a website into executing code that it shouldn’t via failure to sanitize inputs or due to a lack of encoding. There are 3 main types of XSS (persistent, non-persistent, and DOM), and for the sake of brevity, we will be only covering one, DOM-based XSS, done entirely client-side, making it the weird cousin of the three.
+      </p>
+      <p>
+        What is a DOM?
+        <br />
+        In HTML, the Document Object Model is a method of representing the structure of a web page done by taking different elements, such as: &lt;html&gt; tags, &lt;p&gt; tags, attributes such as id’s, class, src, and plotting them onto a tree-like graph. The DOM is used by JavaScript and by extension the developer to interact and manipulate HTML documents, allowing things such as traversal via parent-child relationships and more.
+      </p>
+      <img src="DomWiki.png" alt="[Example of DOM hierarchy from Wikipedia]" />
+
+      <p>
+        [Example of DOM hierarchy from Wikipedia]
+        <br />
+        <br />
+        One pivotal concept of DOM XSS is that of sinks and sources, a source can be described as a Javascript or HTML element which accepts data such as form inputs, URLs or cookies. The attack needs to inject data through unsanitized sources when they parse data through properties such as document.referrer or window.location . This source is connected to a sink which is a function that uses the payload supplied by the source that can execute malicious code that it sent by an attacker, these functions or methods often directly manipulate the DOM such as setAttribute or createElement.  
+        <br />
+        <br />
+        DOM XSS generally has a much broader scope than other Cross Site Scripting attacks, this is partially because having a vulnerable sink in your code such as element.innerHTML may be hard to break if there isn’t an appropriate source to use as an injection paradigm for a payload. The process of finding what sink a source outputs to can be automated using tools such as Burpsuite or OWASP Zap.  
+        <br />
+        <br />
+        The damage that can be done by an XSS attack varies on a case-by-case basis. While not as impactful as a persistent XSS that stays on the system, DOM XSS can and will lead to incidents such as data breaches. One of the largest XSS attacks in the past decade was on eBays site performed by <a href="https://ret2libc.wordpress.com/2016/01/11/a-tale-of-ebay-xss-and-shoddy-incident-response/">MLI in 2015</a> This attack caused a lot of controversy around eBays incident response strategy due to their lack of communication and plan, learn a lesson from this and be prepared to act if and when your website comes under attack by bad actors. 
+      </p>
+      <p>
+        Here is a short example of a DOM-based XSS attack done using Burp Suite on a PortSwigger module. However, it is essential to remember that performing such activities without explicit authorization or on websites without bug bounty programs is illegal and unethical.
+      </p>
+      <p>
+        <strong>Steps:</strong>
+      </p>
+      <ol>
+        <li>Launch Burp Suite and open a browser via the Proxy tab.</li>
+        <img src="image1.png" alt="Burp Suite Proxy Tab" />
+        <li>In the browser, click the jigsaw icon in the top right and then on the Burp Suite icon.</li>
+        <img src="image2.png" alt="Enable Burp Suite in Browser" />
+        <li>Enable DOM Invader in Burp Suite, which is used for automating attacks.</li>
+        <img src="image3.png" alt="Enable DOM Invader in Burp Suite" />
+        <li>Randomize and copy the canary, which is used to track where the injected value ends up.</li>
+        <img src="image4.png" alt="Copy Canary Value" />
+        <li>Enter the canary value into the field and then press "Inspect Element" to bring up DOM Invader.</li>
+        <img src="image5.png" alt="Inspect Element and Search for the Canary Value" />
+        <li>Search for the canary value to see where it ended up. In this instance, it is placed in an image source tag.</li>
+        <br />
+        <code>&lt;img src="/resources/images/tracker.gif?searchTerms=m6tgbof8"&gt;</code>
+        <br />
+        <li>With this information, we can now craft a payload to break out of the string/tag and inject code to test the success.</li>
+        <br />
+        <code>&quot;&gt;&lt;svg onload=alert(1)&gt;</code>
+        <br />
+        <li>Inject the payload into the same input field as the canary.</li>
+        <img src="image6.png" alt="Successful Injection" />
+        <li>We're in!</li>
+      </ol>
+      <p>
+        I hope this introductory guide has been useful for expanding your knowledge of potential threats that may affect your systems. For further practice with this particular attack type I would recommend PortSwigger labs, such as the one used in the example above. Additionally, a part of this webpage has a vulnerability to XSS, click on the projects tab to get started. (To remind you once again, do not use anything learnt in this lesson on websites you do not have explicit permission to test or those without bugbounties available online)
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2023 Blog Website
+  </footer>
+</body>
+</html>

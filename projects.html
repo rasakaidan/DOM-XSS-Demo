@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <style>
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .project {
+      display: none;
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #eee;
+      border-radius: 4px;
+    }
+
+    .project h2 {
+      margin-top: 0;
+    }
+
+    .project p {
+      margin-bottom: 10px;
+    }
+
+    .project a {
+      display: inline-block;
+      padding: 8px 16px;
+      color: #fff;
+      background-color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .project a:hover {
+      background-color: #555;
+    }
+
+    .tabs {
+      margin-bottom: 20px;
+    }
+
+    .tabs ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    .tabs ul li {
+      margin-right: 10px;
+    }
+
+    .tabs ul li a {
+      display: block;
+      padding: 8px 16px;
+      color: #333;
+      background-color: #eee;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .tabs ul li a.active {
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const tabLinks = document.querySelectorAll(".tab-link");
+      const tabContents = document.querySelectorAll(".project");
+  
+      tabLinks.forEach(function(link) {
+        link.addEventListener("click", function(e) {
+          e.preventDefault();
+  
+          tabLinks.forEach(function(link) {
+            link.classList.remove("active");
+          });
+          tabContents.forEach(function(content) {
+            content.style.display = "none";
+          });
+  
+          const tabId = this.getAttribute("data-tab");
+          const tabContent = document.getElementById(tabId);
+  
+          this.classList.add("active");
+          
+          tabContent.innerHTML = "<h2>" + tabId + "</h2><p>" + decodeURIComponent(window.location.hash.substr(1)) + "</p>";
+          tabContent.style.display = "block";
+        });
+      });
+    });
+  </script>
+  
+
+</head>
+<body>
+  <header>
+    <h1>Projects</h1>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <ul>
+        <li><a href="#" class="tab-link active" data-tab="project1">Project 1</a></li>
+        <li><a href="#" class="tab-link" data-tab="project2">Project 2</a></li>
+      </ul>
+    </div>
+
+    <div class="project" id="project1">
+      <h2>Encrypted Messaging Service</h2>
+      <p>Hint: Remember you can inspect element to look at vulnerable code</p>
+      <a href="#">View Project</a>
+    </div>
+
+    <div class="project" id="project2">
+      <h2>Another Project</h2>
+      <p>Hint: Look at the URL!</p>
+      <a href="#">View Project</a>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2023 
+  </footer>
+</body>
+</html>
